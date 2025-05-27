@@ -33,39 +33,37 @@ llm = ChatGoogleGenerativeAI(
 
 
 
-advance_template = """
-    you are a {Role} expert.
-    Context: {Context}
-    Task: {Task}
-    Please provide a {Style} response
-    Input:{Input}         
-    """
+# advance_template = """
+#     you are a {Role} expert.
+#     Context: {Context}
+#     Task: {Task}
+#     Please provide a {Style} response
+#     Input:{Input}         
+#     """
 
-advance_prompt = PromptTemplate(
-    input_variables=["Role","Context","Task","Style","Input"] ,
-    template=advance_template 
-)
+# advance_prompt = PromptTemplate(
+#     input_variables=["Role","Context","Task","Style","Input"] ,
+#     template=advance_template 
+# )
 
-# using the chain we need to change the code in order to use the chain method
+# # using the chain we need to change the code in order to use the chain method
 
-#  advance_format = advance_prompt.format(
-#     Role = "Python Programming",
+# #  advance_format = advance_prompt.format(
+# #     Role = "Python Programming",
+# #     Context = "Teaching a beginner",
+# #     Task = "Explain the concept",
+# #     Style = "Friendly and Understanding",
+# #     Input = "What are functions?"
+# # )
+# # response = llm.invoke(advance_format)
+# # print(response.content)
+
+# chain = LLMChain(llm = llm, prompt = advance_prompt)
+# response  = chain.run(
+#    Role = "Python Programming",
 #     Context = "Teaching a beginner",
 #     Task = "Explain the concept",
 #     Style = "Friendly and Understanding",
-#     Input = "What are functions?"
+#     Input = "What is the Roadmap of Learning Python?" 
 # )
-
-# response = llm.invoke(advance_format)
-# print(response.content)
-
-
-chain = LLMChain(llm = llm, prompt = advance_prompt)
-response  = chain.run(
-   Role = "Python Programming",
-    Context = "Teaching a beginner",
-    Task = "Explain the concept",
-    Style = "Friendly and Understanding",
-    Input = "What are functions?" 
-)
-print(response)
+# print(response)
