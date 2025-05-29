@@ -65,7 +65,7 @@ def main():
     selected_language = st.sidebar.selectbox(
         "Programing Language:",
         languages,
-        index = 0
+        index = 0,
         help="Select the language you want to learn"
         )
 
@@ -73,22 +73,25 @@ def main():
     st.sidebar.markdown("Learning Prefrence")
 
     experience_level = st.sidebar.radio(
-        "Your Experience Level: ",["Beginner","Intermediate","Expert"],
+        "Your Experience Level: ",
+        ["Beginner","Intermediate","Expert"],
         index = 0
-    )
+        )
 
     time_commitment = st.sidebar.slider(
         "Hours Per Day: ",
         min_value = 0.5,
-        max_value= 4.0
+        max_value= 4.0,
         value =1.0,
-        step= 0.5
+        step= 0.5,
         help="Time you can Dedicate Every Day"
-    )
+        )
 
-    generate_plan = st.sidebar.button("Generate Learning Plan",
-        type = "primary"
-        use_container_width= True )
+    generate_plan = st.sidebar.button(
+        "Generate Learning Plan",
+        type = "primary",
+        use_container_width= True 
+        )
 
     if generate_plan or st.session_state.get('last_language') != selected_language:
         st.session_state['last_language']

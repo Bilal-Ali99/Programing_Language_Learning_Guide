@@ -46,7 +46,7 @@ def create_learning_chains(llm):
     )
 
     roadmap_chain = LLMChain(
-        llm = llm
+        llm = llm,
         prompt = roadmap_prompt,
         output_key = 'roadmap'
     )
@@ -78,13 +78,13 @@ def create_learning_chains(llm):
     """
 
     schedule_prompt =PromptTemplate(
-        input_variables=['language','roadmap','experience_level','daily_hours']
+        input_variables=['language','roadmap','experience_level','daily_hours'],
         template = schedule_template
     )
 
     schedule_chain = LLMChain(
-        llm = llm
-        prompt = schedule_prompt
+        llm = llm,
+        prompt = schedule_prompt,
         output_key = 'schedule'
     )
 
@@ -120,13 +120,13 @@ def create_learning_chains(llm):
     """
     
     timeline_prompt = PromptTemplate(
-        input_variables=['language','roadmap','experience_level','daily_hours','schedule']
+        input_variables=['language','roadmap','experience_level','daily_hours','schedule'],
         template= timeline_template
     )
 
     timeline_chain = LLMChain(
-        llm = llm
-        prompt = timeline_prompt
+        llm = llm,
+        prompt = timeline_prompt,
         output_key = 'timeline'
     )
 
