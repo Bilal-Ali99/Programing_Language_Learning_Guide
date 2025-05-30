@@ -165,7 +165,7 @@ def create_learning_chains(llm):
             )
             return{
                 "roadmap": roadmap_result.strip(),
-                "schedule": schedule_result.stript(),
+                "schedule": schedule_result.strip(),
                 "timeline": timeline_result.strip()
             }
 

@@ -106,25 +106,31 @@ def main():
         st.session_state['last_language']
         with st.spinner(f"Creating you personalized {selected_language} learning plan.."):
             try:
-                roadmap_chain, schedule_chain, timeline_chain, sequential_chain = create_learning_chains(llm)
+                roadmap_chain, schedule_chain, timeline_chain, execute_sequential = create_learning_chains(llm)
 
-                result = sequential_chain({
+                result = execute_sequential({
                     "language" : selected_language,
                     "experience_level" : experience_level,
                     "daily_hours" : time_commitment
                 }) 
 
-                tab1, tab2, tab3 = st.tab(["Learning Roadmap","Daily Schedule","Timeline"])
+                display_option = st.selectbox(
+                    "Select What to View",
+                    ["Learning Roadmap","Daily Schedule","Timeline"],
+                    index = 0
+                )
 
-                with tab1:
+                st.markdown("---")
+
+                if display_option == "Learning Roadmap":
                     st.header(f"{selected_language} Learning Roadmap")
                     st.markdown(result["roadmap"])
                 
-                with tab2:
+                elif display_option == "Daily Schedule":
                     st.header(f"Daily Learning Schedule for {selected_language}")
                     st.markdown(result["schedule"])
                 
-                with tab3:
+                elif display_option == "Timeline":
                     st.header(f"Estimated Time")
                     st.markdown(result["timeline"])
                 
@@ -138,17 +144,23 @@ def main():
     elif 'results' in st.session_state and st.session_state.get('generated_language') == selected_language:
         result = st.session_state['results']
 
-        tab1, tab2, tab3 = st.tab(["Learning Roadmap","Daily Schedule","Timeline"])
+        display_option = st.selectbox(
+            "Select What to View",
+            ["Learning Roadmap","Daily Schedule","Timeline"],
+            index = 0
+            )
 
-        with tab1:
+        st.markdown("---")
+
+        if display_option == "Learning Roadmap":
             st.header(f"{selected_language} Learning Roadmap")
             st.markdown(result["roadmap"])
         
-        with tab2:
+        elif display_option == "Daily Schedule":
             st.header(f"Daily Learning Schedule for {selected_language}")
             st.markdown(result["schedule"])
         
-        with tab3:
+        elif display_option == "Timeline":
             st.header(f"Estimated Time")
             st.markdown(result["timeline"])
 
