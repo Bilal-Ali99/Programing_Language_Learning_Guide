@@ -10,7 +10,7 @@ def create_learning_chains(llm):
         llm the initialized language model
 
     Returns:
-        tuple:(roadmap_chain,schedule_chain,timeline_chian,sequential_chain)
+        tuple:(roadmap_chain,schedule_chain,timeline_chain,execute_sequential_chain)
     
     """
 
@@ -48,7 +48,7 @@ def create_learning_chains(llm):
     roadmap_chain = LLMChain(
         llm = llm,
         prompt = roadmap_prompt,
-        output_key = 'roadmap'
+        # output_key = 'roadmap'
     )
 
 
@@ -85,7 +85,7 @@ def create_learning_chains(llm):
     schedule_chain = LLMChain(
         llm = llm,
         prompt = schedule_prompt,
-        output_key = 'schedule'
+        # output_key = 'schedule'
     )
 
 
@@ -127,15 +127,59 @@ def create_learning_chains(llm):
     timeline_chain = LLMChain(
         llm = llm,
         prompt = timeline_prompt,
-        output_key = 'timeline'
+        # output_key = 'timeline'
     )
 
-    sequential_chain = SequentialChain(
-        chains = [roadmap_chain,schedule_chain,timeline_chain],
-        input_variables = ['language','experience_level','daily_hours'],
-        output_key = ['roadmap','schedule','timeline'],
-        verbose = True
-    )
+    def execute_sequential_process(inputs):
+        """
+        
+        Execute the three chains sequentially
+
+        Args:
+            input (dict): Input Variable for the Chain
+
+        Returns:
+            dict: Combined results from the Chains
+        
+        """
+
+        try:
+            roadmap_result = roadmap_chain.run(
+                language = inputs["language"],
+                experience_level = inputs["experience_level"]
+            )
+
+            schedule_result = schedule_chain.run(
+                language = inputs["language"],
+                roadmap = roadmap_result,
+                experience_level = inputs["experience_level"],
+                daily_hours = inputs["daily_hours"]
+            )
+
+            timeline_result = timeline_chain.run(
+                language = inputs["language"],
+                roadmap = roadmap_result,
+                schedule = schedule_result,
+                experience_level = inputs["experience_level"],
+                daily_hours = inputs["daily_hours"]
+            )
+            return{
+                "roadmap": roadmap_result.strip(),
+                "schedule": schedule_result.stript(),
+                "timeline": timeline_result.strip()
+            }
+
+        except Exception as e:
+            raise Exception(f"Error in sequential chain execution: {str(e)}")
+    return roadmap_chain,schedule_chain,timeline_chain,execute_sequential_process
+
+
+    # sequential_chain = SequentialChain(
+    #     chains = [roadmap_chain,schedule_chain,timeline_chain],
+    #     input_variables = ['language','experience_level','daily_hours'],
+    #     output_key = ['roadmap','schedule','timeline'],
+    #     verbose = False
+    # )
 
     return roadmap_chain,schedule_chain,timeline_chain,sequential_chain
 
@@ -206,7 +250,7 @@ def create_custom_roadmap(llm,language,experience_level,daily_hours,focus_area =
     if not is_valid:
         raise ValueError(error_msg)
     
-    roadmap_chain, schedule_chain, timeline_chain, sequential_chain = create_learning_chains(llm)
+    roadmap_chain, schedule_chain, timeline_chain, execute_sequential = create_learning_chains(llm)
 
     chain_input = {
         "language" : language,
@@ -215,7 +259,7 @@ def create_custom_roadmap(llm,language,experience_level,daily_hours,focus_area =
     }
 
     try:
-        result = sequential_chain(chain_input)
+        result = execute_sequential(chain_input)
         return result
     except Exception as e:
         raise Exception(f"Error Generating Learning plan: {str(e)}")

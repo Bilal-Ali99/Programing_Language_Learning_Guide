@@ -45,6 +45,15 @@ def initialize_llm():
 def main():
     """Main Application function"""
 
+    if 'last_language' not in st.session_state:
+        st.session_state['last_language'] = None
+    if 'results' not in st.session_state:
+        st.session_state['results'] = None
+    if 'generated_language' not in st.session_state:
+        st.session_state['generated_language'] = None
+
+
+
     llm = initialize_llm() # Initializing LLM
 
     if llm is None:
@@ -95,7 +104,6 @@ def main():
 
     if generate_plan or st.session_state.get('last_language') != selected_language:
         st.session_state['last_language']
-
         with st.spinner(f"Creating you personalized {selected_language} learning plan.."):
             try:
                 roadmap_chain, schedule_chain, timeline_chain, sequential_chain = create_learning_chains(llm)
@@ -174,4 +182,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main
+    main()
